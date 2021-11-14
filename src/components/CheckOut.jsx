@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import firebase, { db } from "../firebase/firebase";
+import { useCartContext } from "../context/cartContext";
+
 import {
   collection,
   getDocs,
@@ -12,14 +14,18 @@ import {
 } from "firebase/firestore";
 
 function CheckOut({ finalPrice }) {
+  const { cartList } = useCartContext();
+  const [orderId, setOrderId] = useState();
   const [emailCheck, setemailCheck] = useState(false);
-  let nameAndLastName;
-  let tel;
-
-  let email = "";
-  let reEmail = "";
+  const [orderState, setorderState] = useState(false);
+  const [name, setname] = useState();
+  const [tel, settel] = useState();
+  const [email, setemail] = useState();
+  const [reEmail, setreEmail] = useState();
 
   const emailVerification = () => {
+    console.log(email);
+    console.log(reEmail);
     if (email === reEmail) {
       setemailCheck(true);
     } else {
@@ -27,14 +33,18 @@ function CheckOut({ finalPrice }) {
     }
   };
 
-  const purchaseToDb = () => {
+  const purchaseToDb = (e) => {
+    e.preventDefault();
     let data = {
-      name: nameAndLastName,
+      name: name,
       cel: tel,
       email: email,
+      products: cartList,
     };
-    console.log(data);
-    addDoc(collection(db, "orders"), { data });
+    addDoc(collection(db, "orders"), { data }).then((docRef) => {
+      setOrderId(docRef.id);
+      setorderState(true);
+    });
   };
 
   return (
@@ -50,7 +60,7 @@ function CheckOut({ finalPrice }) {
           id="formGroupExampleInput"
           placeholder="Example input placeholder"
           onChange={(e) => {
-            nameAndLastName = e.target.value;
+            setname(e.target.value);
           }}
         />
       </div>
@@ -65,7 +75,7 @@ function CheckOut({ finalPrice }) {
             id="formGroupExampleInput2"
             placeholder="Another input placeholder"
             onChange={(e) => {
-              tel = e.target.value;
+              settel(e.target.value);
             }}
           />
         </div>
@@ -79,7 +89,7 @@ function CheckOut({ finalPrice }) {
             id="formGroupExampleInput2"
             placeholder="Another input placeholder"
             onChange={(e) => {
-              email = e.target.value;
+              setemail(e.target.value);
             }}
           />
         </div>
@@ -93,7 +103,7 @@ function CheckOut({ finalPrice }) {
             id="formGroupExampleInput2"
             placeholder="Another input placeholder"
             onChange={(e) => {
-              reEmail = e.target.value;
+              setreEmail(e.target.value);
             }}
           />
         </div>
@@ -109,6 +119,7 @@ function CheckOut({ finalPrice }) {
       ) : (
         <></>
       )}
+      {orderState === true ? <h3>Su id de compra es: {orderId}</h3> : <></>}
     </div>
   );
 }
