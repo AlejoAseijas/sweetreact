@@ -3,15 +3,27 @@ import { db } from "../firebase/firebase";
 import { collection, getDocs, query } from "firebase/firestore";
 import Item from "./Item";
 
-function ItemListContainer() {
+function ItemListContainer(e) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
+    console.log(e);
     async function getData() {
-      const result = await getDocs(query(collection(db, "home")));
-      result.docs.map((dataProduct) => {
-        return setProducts((products) => [...products, dataProduct.data()]);
-      });
+      if (e.match.path === "/") {
+        const result = await getDocs(query(collection(db, "home")));
+        result.docs.map((dataProduct) => {
+          return setProducts((products) => [...products, dataProduct.data()]);
+        });
+      } else {
+        const result = await getDocs(
+          query(collection(db, e.match.params.idCategory))
+        );
+        result.docs.map((dataProduct) => {
+          return setProducts((products) => [...products, dataProduct.data()]);
+        });
+      }
+
       setLoading(true);
     }
     getData();
