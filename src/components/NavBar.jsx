@@ -3,7 +3,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import cartIcon from "../img/cartIcon.png";
+import { useCartContext } from "../context/cartContext";
+
 function NavBar() {
+  const { iconCart } = useCartContext();
+  let iconQty = iconCart();
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
@@ -26,6 +30,9 @@ function NavBar() {
               <Link to="/cart">
                 <img src={cartIcon} alt="cartLogo" />
               </Link>
+            </Nav.Link>
+            <Nav.Link>
+              <h5>{iconQty}</h5>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

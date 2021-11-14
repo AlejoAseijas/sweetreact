@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import ItemDetailContainer from "./ItemDetailContainer";
 function Item({ dataProduct }) {
   return (
     <>
@@ -12,7 +11,21 @@ function Item({ dataProduct }) {
               <img src={dataItem.img} alt="foto" className="img-thumbnail" />
             </div>
             <div className="card-footer text-center">
-              <Link to={`/detalle/${dataItem.id}`}>Detail</Link>
+              <Link to={`/detalle/${dataItem.id}`}>
+                <button
+                  className="btn btn-outline-info"
+                  onClick={() => {
+                    localStorage.removeItem("ItemDetail");
+                    localStorage.setItem(
+                      "itemDetail",
+                      JSON.stringify(dataItem)
+                    );
+                  }}
+                >
+                  {" "}
+                  Detail
+                </button>
+              </Link>
             </div>
           </div>
         );

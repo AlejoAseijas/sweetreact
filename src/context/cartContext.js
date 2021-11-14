@@ -7,20 +7,22 @@ export const CartContext = ({ children }) => {
   const [cartList, setCartList] = useState([]);
 
   const agregarItem = (item, cantidad) => {
-    let products = {
-      itemPro: item,
-      quantity: cantidad,
+    let product = {
+      name: item.name,
+      price: item.price,
+      id: item.id.trim(),
+      qty: cantidad,
     };
-    setCartList([...cartList, products]);
+    setCartList((cartList) => [...cartList, product]);
   };
 
   const deleteFromCart = (id) => {
-    const deleteProduct = cartList.filter((prod) => prod.item.id !== id);
-    setCartList([deleteProduct]);
+    const deleteProduct = cartList.filter((prod) => prod.id !== id);
+    setCartList(deleteProduct);
   };
 
   const iconCart = () => {
-    return cartList.reduce((acum, valor) => acum + valor.quantity, 0);
+    return cartList.reduce((acum, valor) => acum + valor.qty, 0);
   };
 
   const vaciarCarrito = () => {
