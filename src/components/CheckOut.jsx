@@ -1,17 +1,8 @@
-import React, { useEffect, useState } from "react";
-import firebase, { db } from "../firebase/firebase";
+import React, { useState } from "react";
+import { db } from "../firebase/firebase";
 import { useCartContext } from "../context/cartContext";
 
-import {
-  collection,
-  getDocs,
-  getDoc,
-  query,
-  doc,
-  addDoc,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 
 function CheckOut({ finalPrice }) {
   const { cartList } = useCartContext();
